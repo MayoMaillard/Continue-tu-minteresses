@@ -4,20 +4,33 @@ import random
 # Configuration de la page
 st.set_page_config(page_title="Continue tu m'intéresses", page_icon="✨", layout="centered")
 
-# --- DESIGN PREMIUM (CSS) ---
+# --- DESIGN PREMIUM ET MOBILE-FIRST (CSS) ---
 st.markdown("""
     <style>
-    /* Fond dégradé sombre */
+    /* Fond dégradé */
     .stApp {
         background: linear-gradient(180deg, #0e1117 0%, #1a1c23 100%);
     }
     
-    /* Carte style Papier Premium */
+    /* FORCE LES COLONNES À RESTER CÔTE À CÔTE SUR MOBILE */
+    [data-testid="column"] {
+        width: fit-content !important;
+        flex: 1 1 auto !important;
+        min-width: 0px !important;
+    }
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    /* CARTE */
     .card-container {
         background-color: #fdfdfd;
         padding: 40px 25px;
         border-radius: 24px;
-        border-bottom: 6px solid #e67e22; 
+        border-bottom: 6px solid #f39c12; 
         text-align: center;
         min-height: 280px;
         display: flex;
@@ -25,7 +38,6 @@ st.markdown("""
         justify-content: center;
         box-shadow: 0px 20px 40px rgba(0,0,0,0.4);
         margin: 10px 0;
-        transition: all 0.3s ease;
     }
     
     .question-text {
@@ -35,53 +47,42 @@ st.markdown("""
         font-family: 'Helvetica Neue', sans-serif;
         line-height: 1.4;
     }
-    
-    /* Style du bouton Principal (Piocher) */
-    div.stButton > button:first-child {
-        background-color: #f39c12;
-        color: white;
-        border-radius: 15px;
-        border: none;
-        height: 3.8em;
-        font-size: 1.1rem;
-        font-weight: bold;
-        box-shadow: 0px 4px 15px rgba(243, 156, 18, 0.3);
+
+    /* STYLE BOUTON PIOCHER (PRIMARY) */
+    .stButton button[kind="primary"] {
+        background-color: #f39c12 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 15px !important;
+        height: 3.8em !important;
+        width: 100% !important;
+        font-weight: bold !important;
+        box-shadow: 0px 4px 15px rgba(243, 156, 18, 0.3) !important;
     }
 
-    /* Style du bouton Secondaire (Retour) - Plus discret */
-    div.stButton > button:active, div.stButton > button:focus, .st-emotion-cache-19rxjzo {
-        background-color: #2c3e50;
-    }
-    
-    /* Forcer le bouton précédent à être gris/discret */
-    section[data-testid="stSidebar"] + div .stButton button[kind="secondary"] {
-        background-color: #2c3e50;
-        color: #bdc3c7;
-        border: 1px solid #34495e;
-        border-radius: 15px;
+    /* STYLE BOUTON RETOUR (SECONDARY) */
+    .stButton button[kind="secondary"] {
+        background-color: #2c3e50 !important;
+        color: #bdc3c7 !important;
+        border: 1px solid #34495e !important;
+        border-radius: 15px !important;
+        height: 3.8em !important;
+        width: 100% !important;
     }
 
-    h1 {
-        font-family: 'Georgia', serif;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        margin-bottom: 0px;
+    /* HOVERS */
+    .stButton button[kind="primary"]:hover {
+        background-color: #e67e22 !important;
+        border: none !important;
     }
-    
-    .instruction {
-        color: #7f8c8d;
-        font-style: italic;
-        font-size: 0.9rem;
-        margin-bottom: 30px;
+    .stButton button[kind="secondary"]:hover {
+        background-color: #34495e !important;
+        border: 1px solid #f39c12 !important;
     }
 
-    .progress-text {
-        color: #7f8c8d;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 10px;
-    }
+    h1 { font-family: 'Georgia', serif; font-weight: 700; color: white; margin-bottom: 0px; text-align: center; }
+    .instruction { color: #7f8c8d; font-style: italic; font-size: 0.9rem; margin-bottom: 20px; text-align: center; }
+    .progress-text { color: #7f8c8d; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -122,7 +123,7 @@ if 'questions' not in st.session_state:
         "Si tu pouvais revivre un jour de ta vie autant de fois que tu le souhaites, lequel ce serait ?",
         "Quels sont pour toi les meilleurs plaisirs de la vie ?",
         "Est-ce que tu as une routine, ou une activité quotidienne qui te met dans un état de plénitude ?",
-        "S'il y avait une version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
+        "S'il y avait un version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
         "Quel aurait été ton métier au Moyen-Age ?",
     ]
 
@@ -137,15 +138,16 @@ if 'current_q' not in st.session_state:
 if 'previous_q' not in st.session_state:
     st.session_state.previous_q = None
 
-# --- STRUCTURE DE L'ÉCRAN ---
+# --- STRUCTURE ---
 st.title("✨ Continue tu m'intéresses")
 st.markdown('<p class="instruction">Laissez la curiosité guider la soirée...</p>', unsafe_allow_html=True)
 
-# Colonnes asymétriques : 3/4 pour piocher, 1/4 pour retour
-col_main, col_back = st.columns([3, 1])
+# Colonnes avec ratio 4 pour le bouton principal et 1 pour le retour
+col_main, col_back = st.columns([4, 1])
 
 with col_main:
-    if st.button('🃏 PIOCHER UNE CARTE'):
+    # Utilisation du type "primary" pour garantir la couleur orange
+    if st.button('🃏 PIOCHER UNE CARTE', type="primary"):
         if st.session_state.current_q != "Prêt pour une discussion intéressante ?":
             st.session_state.previous_q = st.session_state.current_q
         
@@ -159,29 +161,20 @@ with col_main:
             st.rerun()
 
 with col_back:
+    # On affiche le bouton retour seulement s'il y a un historique
+    # Utilisation du type "secondary" pour le bouton discret
     if st.session_state.previous_q:
-        # On utilise une flèche pour gagner de la place
-        if st.button('🔙'):
+        if st.button('🔙', type="secondary"):
             temp = st.session_state.current_q
             st.session_state.current_q = st.session_state.previous_q
             st.session_state.previous_q = temp
             st.rerun()
+    else:
+        # Bouton fantôme pour garder l'alignement si pas d'historique
+        st.button(' ', type="secondary", disabled=True)
 
-# LA CARTE
+# CARTE
 st.markdown(f'''
     <div class="card-container">
         <div class="question-text">{st.session_state.current_q}</div>
     </div>
-    ''', unsafe_allow_html=True)
-
-# LA PROGRESSION (JUSTE EN DESSOUS)
-nb_totales = len(st.session_state.questions)
-nb_tirees = nb_totales - len(st.session_state.deck)
-progression = nb_tirees / nb_totales
-
-st.progress(progression)
-st.markdown(f'<p class="progress-text">Progression : {nb_tirees} / {nb_totales}</p>', unsafe_allow_html=True)
-
-# FOOTER
-st.write("---")
-st.caption("Inspiré du podcast de Patrick Baud • Projet Personnel")
