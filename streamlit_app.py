@@ -139,7 +139,6 @@ if 'previous_q' not in st.session_state:
 
 # --- STRUCTURE ---
 st.title("✨ Continue tu m'intéresses")
-st.markdown('<p class="instruction">Laissez la curiosité guider la soirée...</p>', unsafe_allow_html=True)
 
 # Colonnes avec ratio 4 pour le bouton principal et 1 pour le retour
 col_main, col_back = st.columns([4, 1])
