@@ -111,6 +111,12 @@ if 'questions' not in st.session_state:
         "S'il y avait une version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
         "Quel aurait été ton métier au Moyen-Age ?",
     ]
+# --- LOGIQUE DE LA PIOCHE (À insérer ici) ---
+if 'deck' not in st.session_state or len(st.session_state.deck) == 0:
+    # On crée une copie de ta liste de questions actuelle
+    st.session_state.deck = list(st.session_state.questions)
+    import random # Au cas où il n'est pas déjà chargé
+    random.shuffle(st.session_state.deck)
 
 # --- LOGIQUE D'AFFICHAGE ---
 st.title("✨ Continue tu m'intéresses")
@@ -122,7 +128,7 @@ if 'current_q' not in st.session_state:
 
 # Bouton pour piocher
 if st.button('🃏 PIOCHER UNE CARTE'):
-    st.session_state.current_q = random.choice(st.session_state.questions)
+    st.session_state.current_q = st.session_state.deck.pop()
 
 # Affichage de la carte
 st.markdown(f'''
@@ -130,6 +136,10 @@ st.markdown(f'''
         <div class="question-text">{st.session_state.current_q}</div>
     </div>
     ''', unsafe_allow_html=True)
+
+# Petit compteur discret
+nb_restantes = len(st.session_state.deck)
+st.markdown(f'<p style="text-align:center; color:gray;">Cartes restantes : {nb_restantes}</p>', unsafe_allow_html=True)
 
 # Footer
 st.write("---")
