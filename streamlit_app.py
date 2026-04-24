@@ -126,4 +126,4 @@ st.markdown(f'''
 
 # Footer
 st.write("---")
-st.caption("Projet personnel - Inspiré par la curiosité sincère.")
+st.caption("Projet personnel - Inspiré du podcast du même nom créé par Patrick Baud")
