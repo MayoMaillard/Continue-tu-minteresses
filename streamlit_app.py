@@ -102,14 +102,14 @@ if 'questions' not in st.session_state:
         "Y a-t-il un talent ou une compétence que tu admires chez les autres, mais que tu te sens totalement incapable de pratiquer ?",
         "Si tu devais vivre dans une autre époque, mais avec ton niveau de confort actuel, laquelle choisirais-tu ?",
         "Si tu pouvais supprimer une peur ou une angoisse de ton esprit pour toujours, laquelle choisirais-tu ?",
-        "Si tu pouvais envoyer un SMS de 140 caractères à toi-même il y a 10 ans, qu'écrirais-tu ?"
-        "A quelle matière scolaire tu prêterais beaucoup plus d’attention maintenant que tu es adulte ?"
-        "Quel petit événement où décision a eu un grand impact sur la suite de ta vie ?"
-        "Si tu pouvais revivre un jour de ta vie autant de fois que tu le souhaites, lequel ce serait ?"
-        "Quels sont pour toi les meilleurs plaisirs de la vie ?"
-        "Est-ce que tu as une routine, ou une activité quotidienne qui te met dans un état de plénitude ?"
-        "S'il y avait une version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?"
-        "Quel aurait été ton métier au Moyen-Age ?"
+        "Si tu pouvais envoyer un SMS de 140 caractères à toi-même il y a 10 ans, qu'écrirais-tu ?",
+        "A quelle matière scolaire tu prêterais beaucoup plus d’attention maintenant que tu es adulte ?",
+        "Quel petit événement où décision a eu un grand impact sur la suite de ta vie ?",
+        "Si tu pouvais revivre un jour de ta vie autant de fois que tu le souhaites, lequel ce serait ?",
+        "Quels sont pour toi les meilleurs plaisirs de la vie ?",
+        "Est-ce que tu as une routine, ou une activité quotidienne qui te met dans un état de plénitude ?",
+        "S'il y avait une version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
+        "Quel aurait été ton métier au Moyen-Age ?",
     ]
 
 # --- LOGIQUE D'AFFICHAGE ---
