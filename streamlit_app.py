@@ -1,79 +1,85 @@
 import streamlit as st
 import random
 
-# Configuration de la page (titre de l'onglet et icône)
-st.set_page_config(page_title="Continue tu m'intéresses", page_icon="✨")
+# Configuration de la page
+st.set_page_config(page_title="Continue tu m'intéresses", page_icon="✨", layout="centered")
 
-# --- DESIGN PERSONNALISÉ (CSS) ---
+# --- DESIGN PREMIUM (CSS) ---
 st.markdown("""
     <style>
-    /* Fond de l'application */
-    .main {
-        background-color: #0e1117;
+    /* Fond dégradé sombre */
+    .stApp {
+        background: linear-gradient(180deg, #0e1117 0%, #1a1c23 100%);
     }
     
-    /* Style de la carte */
+    /* Carte style Papier Premium */
     .card-container {
-        background-color: #ffffff;
-        padding: 50px 30px;
-        border-radius: 20px;
-        border-left: 12px solid #f39c12; /* Bordure orange rappelant la curiosité */
+        background-color: #fdfdfd;
+        padding: 40px 25px;
+        border-radius: 24px;
+        border-bottom: 6px solid #e67e22; 
         text-align: center;
-        min-height: 300px;
+        min-height: 280px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0px 15px 35px rgba(0,0,0,0.4);
-        margin: 20px 0;
-    }
-    
-    /* Style du texte de la question */
-    .question-text {
-        color: #1a1a1a;
-        font-size: 24px;
-        font-weight: 500;
-        font-family: 'Georgia', serif;
-        line-height: 1.5;
-    }
-    
-    /* Style du bouton */
-    .stButton>button {
-        width: 100%;
-        border-radius: 12px;
-        height: 3.5em;
-        background-color: #f39c12;
-        color: white;
-        font-weight: bold;
-        font-size: 1.1rem;
-        border: none;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        box-shadow: 0px 20px 40px rgba(0,0,0,0.4);
+        margin: 10px 0;
         transition: all 0.3s ease;
     }
     
-    .stButton>button:hover {
-        background-color: #e67e22;
-        transform: translateY(-2px);
+    .question-text {
+        color: #2c3e50;
+        font-size: 22px;
+        font-weight: 600;
+        font-family: 'Helvetica Neue', sans-serif;
+        line-height: 1.4;
     }
     
-    /* Titre principal */
+    /* Style du bouton Principal (Piocher) */
+    div.stButton > button:first-child {
+        background-color: #f39c12;
+        color: white;
+        border-radius: 15px;
+        border: none;
+        height: 3.8em;
+        font-size: 1.1rem;
+        font-weight: bold;
+        box-shadow: 0px 4px 15px rgba(243, 156, 18, 0.3);
+    }
+
+    /* Style du bouton Secondaire (Retour) - Plus discret */
+    div.stButton > button:active, div.stButton > button:focus, .st-emotion-cache-19rxjzo {
+        background-color: #2c3e50;
+    }
+    
+    /* Forcer le bouton précédent à être gris/discret */
+    section[data-testid="stSidebar"] + div .stButton button[kind="secondary"] {
+        background-color: #2c3e50;
+        color: #bdc3c7;
+        border: 1px solid #34495e;
+        border-radius: 15px;
+    }
+
     h1 {
-        color: #ffffff !important;
-        text-align: center;
         font-family: 'Georgia', serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 0px;
     }
     
-    /* Texte d'instruction */
     .instruction {
-        color: #bdc3c7;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    /* Style pour le texte de progression */
-    .progress-text {
-        color: #bdc3c7;
-        text-align: center;
+        color: #7f8c8d;
+        font-style: italic;
         font-size: 0.9rem;
+        margin-bottom: 30px;
+    }
+
+    .progress-text {
+        color: #7f8c8d;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
         margin-top: 10px;
     }
     </style>
@@ -126,60 +132,56 @@ if 'deck' not in st.session_state or len(st.session_state.deck) == 0:
     random.shuffle(st.session_state.deck)
 
 if 'current_q' not in st.session_state:
-    st.session_state.current_q = "Clique sur le bouton pour piocher une carte."
+    st.session_state.current_q = "Prêt pour une discussion intéressante ?"
 
 if 'previous_q' not in st.session_state:
     st.session_state.previous_q = None
 
-# --- AFFICHAGE ---
+# --- STRUCTURE DE L'ÉCRAN ---
 st.title("✨ Continue tu m'intéresses")
-st.markdown('<p class="instruction">Piochez une carte et laissez la curiosité guider la conversation.</p>', unsafe_allow_html=True)
+st.markdown('<p class="instruction">Laissez la curiosité guider la soirée...</p>', unsafe_allow_html=True)
 
-# Boutons en colonnes
-col1, col2 = st.columns(2)
+# Colonnes asymétriques : 3/4 pour piocher, 1/4 pour retour
+col_main, col_back = st.columns([3, 1])
 
-with col1:
-    if st.button('🃏 PIOCHER'):
-        # Sauvegarde pour le bouton retour
-        if st.session_state.current_q != "Clique sur le bouton pour piocher une carte.":
+with col_main:
+    if st.button('🃏 PIOCHER UNE CARTE'):
+        if st.session_state.current_q != "Prêt pour une discussion intéressante ?":
             st.session_state.previous_q = st.session_state.current_q
         
-        # Tirage d'une carte
         if len(st.session_state.deck) > 0:
             st.session_state.current_q = st.session_state.deck.pop()
             st.rerun()
         else:
-            # Remélange automatique si vide
             st.session_state.deck = list(st.session_state.questions)
             random.shuffle(st.session_state.deck)
             st.session_state.current_q = st.session_state.deck.pop()
             st.rerun()
 
-with col2:
+with col_back:
     if st.session_state.previous_q:
-        if st.button('⬅️ PRÉCÉDENTE'):
-            # Échange pour revenir en arrière
+        # On utilise une flèche pour gagner de la place
+        if st.button('🔙'):
             temp = st.session_state.current_q
             st.session_state.current_q = st.session_state.previous_q
             st.session_state.previous_q = temp
             st.rerun()
 
-# Affichage de la carte
+# LA CARTE
 st.markdown(f'''
     <div class="card-container">
         <div class="question-text">{st.session_state.current_q}</div>
     </div>
     ''', unsafe_allow_html=True)
 
-# --- BARRE DE PROGRESSION (JUSTE EN DESSOUS) ---
+# LA PROGRESSION (JUSTE EN DESSOUS)
 nb_totales = len(st.session_state.questions)
-nb_restantes = len(st.session_state.deck)
-nb_tirees = nb_totales - nb_restantes
-progression = nb_tirees / nb_totales if nb_totales > 0 else 0
+nb_tirees = nb_totales - len(st.session_state.deck)
+progression = nb_tirees / nb_totales
 
 st.progress(progression)
 st.markdown(f'<p class="progress-text">Progression : {nb_tirees} / {nb_totales}</p>', unsafe_allow_html=True)
 
-# Footer
+# FOOTER
 st.write("---")
-st.caption("Projet personnel - Inspiré du podcast du même nom créé par Patrick Baud")
+st.caption("Inspiré du podcast de Patrick Baud • Projet Personnel")
