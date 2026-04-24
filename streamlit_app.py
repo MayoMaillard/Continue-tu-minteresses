@@ -73,7 +73,6 @@ st.markdown("""
     /* HOVERS */
     .stButton button[kind="primary"]:hover {
         background-color: #e67e22 !important;
-        border: none !important;
     }
     .stButton button[kind="secondary"]:hover {
         background-color: #34495e !important;
@@ -146,7 +145,6 @@ st.markdown('<p class="instruction">Laissez la curiosité guider la soirée...</
 col_main, col_back = st.columns([4, 1])
 
 with col_main:
-    # Utilisation du type "primary" pour garantir la couleur orange
     if st.button('🃏 PIOCHER UNE CARTE', type="primary"):
         if st.session_state.current_q != "Prêt pour une discussion intéressante ?":
             st.session_state.previous_q = st.session_state.current_q
@@ -161,8 +159,6 @@ with col_main:
             st.rerun()
 
 with col_back:
-    # On affiche le bouton retour seulement s'il y a un historique
-    # Utilisation du type "secondary" pour le bouton discret
     if st.session_state.previous_q:
         if st.button('🔙', type="secondary"):
             temp = st.session_state.current_q
@@ -170,11 +166,23 @@ with col_back:
             st.session_state.previous_q = temp
             st.rerun()
     else:
-        # Bouton fantôme pour garder l'alignement si pas d'historique
         st.button(' ', type="secondary", disabled=True)
 
-# CARTE
-st.markdown(f'''
+# LA CARTE (C'est ici que l'erreur se trouvait)
+st.markdown(f"""
     <div class="card-container">
         <div class="question-text">{st.session_state.current_q}</div>
     </div>
+    """, unsafe_allow_html=True)
+
+# PROGRESSION
+nb_totales = len(st.session_state.questions)
+nb_tirees = nb_totales - len(st.session_state.deck)
+progression = nb_tirees / nb_totales
+
+st.progress(progression)
+st.markdown(f'<p class="progress-text">Progression : {nb_tirees} / {nb_totales}</p>', unsafe_allow_html=True)
+
+# FOOTER
+st.write("---")
+st.caption("Inspiré du podcast de Patrick Baud • Projet Personnel")
