@@ -24,7 +24,7 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         box-shadow: 0px 15px 35px rgba(0,0,0,0.4);
-        margin: 25px 0;
+        margin: 20px 0;
     }
     
     /* Style du texte de la question */
@@ -40,11 +40,11 @@ st.markdown("""
     .stButton>button {
         width: 100%;
         border-radius: 12px;
-        height: 4em;
+        height: 3.5em;
         background-color: #f39c12;
         color: white;
         font-weight: bold;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         border: none;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
@@ -68,10 +68,18 @@ st.markdown("""
         text-align: center;
         margin-bottom: 20px;
     }
+    
+    /* Style pour le texte de progression */
+    .progress-text {
+        color: #bdc3c7;
+        text-align: center;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- TA LISTE DE QUESTIONS FINALE ---
+# --- TA LISTE DE QUESTIONS ---
 if 'questions' not in st.session_state:
     st.session_state.questions = [
         "Qu’est ce qui t'intéresse le plus en ce moment ?",
@@ -111,24 +119,50 @@ if 'questions' not in st.session_state:
         "S'il y avait une version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
         "Quel aurait été ton métier au Moyen-Age ?",
     ]
-# --- LOGIQUE DE LA PIOCHE (À insérer ici) ---
+
+# --- LOGIQUE DE LA PIOCHE ---
 if 'deck' not in st.session_state or len(st.session_state.deck) == 0:
-    # On crée une copie de ta liste de questions actuelle
     st.session_state.deck = list(st.session_state.questions)
-    import random # Au cas où il n'est pas déjà chargé
     random.shuffle(st.session_state.deck)
 
-# --- LOGIQUE D'AFFICHAGE ---
-st.title("✨ Continue tu m'intéresses")
-st.markdown('<p class="instruction">Piochez une carte et laissez la curiosité guider la conversation.</p>', unsafe_allow_html=True)
-
-# Initialisation de la question affichée
 if 'current_q' not in st.session_state:
     st.session_state.current_q = "Clique sur le bouton pour piocher une carte."
 
-# Bouton pour piocher
-if st.button('🃏 PIOCHER UNE CARTE'):
-    st.session_state.current_q = st.session_state.deck.pop()
+if 'previous_q' not in st.session_state:
+    st.session_state.previous_q = None
+
+# --- AFFICHAGE ---
+st.title("✨ Continue tu m'intéresses")
+st.markdown('<p class="instruction">Piochez une carte et laissez la curiosité guider la conversation.</p>', unsafe_allow_html=True)
+
+# Boutons en colonnes
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button('🃏 PIOCHER'):
+        # Sauvegarde pour le bouton retour
+        if st.session_state.current_q != "Clique sur le bouton pour piocher une carte.":
+            st.session_state.previous_q = st.session_state.current_q
+        
+        # Tirage d'une carte
+        if len(st.session_state.deck) > 0:
+            st.session_state.current_q = st.session_state.deck.pop()
+            st.rerun()
+        else:
+            # Remélange automatique si vide
+            st.session_state.deck = list(st.session_state.questions)
+            random.shuffle(st.session_state.deck)
+            st.session_state.current_q = st.session_state.deck.pop()
+            st.rerun()
+
+with col2:
+    if st.session_state.previous_q:
+        if st.button('⬅️ PRÉCÉDENTE'):
+            # Échange pour revenir en arrière
+            temp = st.session_state.current_q
+            st.session_state.current_q = st.session_state.previous_q
+            st.session_state.previous_q = temp
+            st.rerun()
 
 # Affichage de la carte
 st.markdown(f'''
@@ -137,9 +171,14 @@ st.markdown(f'''
     </div>
     ''', unsafe_allow_html=True)
 
-# Petit compteur discret
+# --- BARRE DE PROGRESSION (JUSTE EN DESSOUS) ---
+nb_totales = len(st.session_state.questions)
 nb_restantes = len(st.session_state.deck)
-st.markdown(f'<p style="text-align:center; color:gray;">Cartes restantes : {nb_restantes}</p>', unsafe_allow_html=True)
+nb_tirees = nb_totales - nb_restantes
+progression = nb_tirees / nb_totales if nb_totales > 0 else 0
+
+st.progress(progression)
+st.markdown(f'<p class="progress-text">Progression : {nb_tirees} / {nb_totales}</p>', unsafe_allow_html=True)
 
 # Footer
 st.write("---")
