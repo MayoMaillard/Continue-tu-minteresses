@@ -109,6 +109,8 @@ questions_list = [
     "Est-ce que tu as une routine, ou une activité quotidienne qui te met dans un état de plénitude ?",
     "S'il y avait un version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
     "Quel aurait été ton métier au Moyen-Age ?",
+    "Quel jeu d’enfant t’a particulièrement marqué ?",
+    "Quel est ton plus grand “unpopular opinion” ?"
 ]
 
 # --- SYSTÈME DE PERSISTENCE ---
@@ -130,7 +132,6 @@ random.shuffle(deck)
 
 # --- STRUCTURE ---
 st.title("✨ Continue tu m'intéresses")
-st.markdown('<p class="instruction">Oubliez le small talk, passez aux choses sérieuses.</p>', unsafe_allow_html=True)
 
 col_main, col_back = st.columns([4, 1])
 
