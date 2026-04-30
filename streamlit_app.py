@@ -110,7 +110,9 @@ questions_list = [
     "S'il y avait un version de toi dans un univers parallèle qui a fait un choix radicalement différent du tien à un moment important, à quoi ressemblerait sa vie aujourd'hui ?",
     "Quel aurait été ton métier au Moyen-Age ?",
     "Quel jeu d’enfant t’a particulièrement marqué ?",
-    "Quel est ton plus grand “unpopular opinion” ?"
+    "Quel est ton plus grand “unpopular opinion” ?",
+    "Y a-t-il une compétence “inutile” que tu maîtrises ?",
+    "Quelle rencontre avec un.e inconnu.e t’a particulièrement marquée ?",
 ]
 
 # --- SYSTÈME DE PERSISTENCE ---
